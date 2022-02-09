@@ -1,0 +1,54 @@
+diff --git a/toolchain/cc_toolchain_config.bzl b/toolchain/cc_toolchain_config.bzl
+index 1f0395b..14d7823 100644
+--- a/toolchain/cc_toolchain_config.bzl
++++ b/toolchain/cc_toolchain_config.bzl
+@@ -65,6 +65,15 @@ def cc_toolchain_config(
+             "darwin_x86_64",
+             "darwin_x86_64",
+         ),
++        "darwin-arm64": (
++            "clang-arm64-darwin",
++            "arm64-apple-macosx",
++            "darwin_arm64",
++            "macosx",
++            "clang",
++            "darwin_arm64",
++            "darwin_arm64",
++        ),
+         "linux-x86_64": (
+             "clang-x86_64-linux",
+             "x86_64-unknown-linux-gnu",
+diff --git a/toolchain/internal/common.bzl b/toolchain/internal/common.bzl
+index a0e73c9..073bee2 100644
+--- a/toolchain/internal/common.bzl
++++ b/toolchain/internal/common.bzl
+@@ -12,7 +12,7 @@
+ # See the License for the specific language governing permissions and
+ # limitations under the License.
+ 
+-SUPPORTED_TARGETS = [("linux", "x86_64"), ("linux", "aarch64"), ("darwin", "x86_64")]
++SUPPORTED_TARGETS = [("linux", "x86_64"), ("linux", "aarch64"), ("darwin", "x86_64"), ("darwin", "arm64")]
+ 
+ host_tool_features = struct(
+     SUPPORTS_ARG_FILE = "supports_arg_file",
+diff --git a/toolchain/internal/llvm_distributions.bzl b/toolchain/internal/llvm_distributions.bzl
+index 8d3441b..52c3679 100644
+--- a/toolchain/internal/llvm_distributions.bzl
++++ b/toolchain/internal/llvm_distributions.bzl
+@@ -179,6 +179,7 @@ _llvm_distributions = {
+     "clang+llvm-13.0.0-x86_64-apple-darwin.tar.xz": "d051234eca1db1f5e4bc08c64937c879c7098900f7a0370f3ceb7544816a8b09",
+     "clang+llvm-13.0.0-x86_64-linux-gnu-ubuntu-16.04.tar.xz": "76d0bf002ede7a893f69d9ad2c4e101d15a8f4186fbfe24e74856c8449acd7c1",
+     "clang+llvm-13.0.0-x86_64-linux-gnu-ubuntu-20.04.tar.xz": "2c2fb857af97f41a5032e9ecadf7f78d3eff389a5cd3c9ec620d24f134ceb3c8",
++    "clang+llvm-13.0.0-arm64-apple-darwin.tar.xz": "ac96dff9a0604dd70493786dd3a01997cb41a3da03a3d383caf106712cce1f61",
+ }
+ 
+ # Note: Unlike the user-specified llvm_mirror attribute, the URL prefixes in
+@@ -246,7 +247,7 @@ def download_llvm_preconfigured(rctx):
+     urls = []
+     url_suffix = "{0}/{1}".format(llvm_version, basename).replace("+", "%2B")
+     if rctx.attr.llvm_mirror:
+-        urls.append("{0}/{1}".format(rctx.attr.llvm_mirror, url_suffix))
++        urls.append("{0}{1}".format(rctx.attr.llvm_mirror, url_suffix))
+     if rctx.attr.alternative_llvm_sources:
+         for pattern in rctx.attr.alternative_llvm_sources:
+             urls.append(pattern.format(llvm_version = llvm_version, basename = basename))

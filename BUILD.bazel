@@ -1,0 +1,31 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
+load("@io_bazel_rules_docker//container:container.bzl", "container_image", "container_layer")
+
+go_library(
+    name = "main_lib",
+    srcs = ["main.go"],
+    importpath = "github.com/example/main",
+    deps = ["@com_github_confluentinc_confluent_kafka_go//kafka"],
+)
+
+go_binary(
+    name = "main",
+    embed = [":main_lib"],
+    goarch = "amd64",
+    goos = "linux",
+    pure = "off",
+    visibility = ["//visibility:public"],
+)
+
+container_layer(
+    name = "main_layer",
+    directory = "/usr/bin",
+    files = [":main"],
+)
+
+container_image(
+    name = "main_image",
+    base = "@golang_base_image//image",
+    layers = [":main_layer"],
+    workdir = "/usr/bin",
+)

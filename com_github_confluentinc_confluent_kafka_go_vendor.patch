@@ -1,0 +1,22 @@
+--- kafka/librdkafka_vendor/BUILD.bazel
++++ kafka/librdkafka_vendor/BUILD.bazel
+@@ -1,5 +1,19 @@
+ load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
++cc_import(
++    name = "librdkafka_macos",
++    hdrs = ["rdkafka.h"],
++    static_library = "librdkafka_darwin.a",
++    visibility = ["//visibility:public"],
++)
++
++cc_import(
++    name = "librdkafka_linux",
++    hdrs = ["rdkafka.h"],
++    static_library = "librdkafka_glibc_linux.a",
++    visibility = ["//visibility:public"],
++)
++
+ go_library(
+     name = "librdkafka_vendor",
+     srcs = [

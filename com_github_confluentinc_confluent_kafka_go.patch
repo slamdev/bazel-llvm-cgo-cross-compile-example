@@ -1,0 +1,21 @@
+--- kafka/BUILD.bazel
++++ kafka/BUILD.bazel
+@@ -27,6 +27,18 @@
+         "testhelpers.go",
+         "time.go",
+     ],
++    cdeps = select({
++        "@io_bazel_rules_go//go/platform:darwin": ["//kafka/librdkafka_vendor:librdkafka_macos"],
++        "@io_bazel_rules_go//go/platform:linux": ["//kafka/librdkafka_vendor:librdkafka_linux"],
++    }),
++    clinkopts = select({
++        "@io_bazel_rules_go//go/platform:darwin":  ["-lm -ldl -lpthread -lssl -lcrypto -lz -lsasl2 -L/usr/local/opt/openssl/lib"],
++        "@io_bazel_rules_go//go/platform:linux":   ["-lm -ldl -lpthread -lssl -lcrypto -lz -lsasl2 -llz4 -lrt"],
++    }),
++    copts = select({
++        "@io_bazel_rules_go//go/platform:darwin":  ["-DUSE_VENDORED_LIBRDKAFKA"],
++        "@io_bazel_rules_go//go/platform:linux":   ["-DUSE_VENDORED_LIBRDKAFKA"],
++    }),
+     cgo = True,
+     importpath = "github.com/confluentinc/confluent-kafka-go/kafka",
+     visibility = ["//visibility:public"],
