@@ -16,9 +16,9 @@ http_archive(
 
 http_archive(
     name = "io_bazel_rules_docker",
-    sha256 = "db427107e4c36a3713c24daf5fcdf7719fe664e0c36e089b5b16d15cf331ce60",
-    strip_prefix = "rules_docker-8a4f73fb29a64ba813087220b200f49a1ca10faa",
-    urls = ["https://github.com/bazelbuild/rules_docker/archive/8a4f73fb29a64ba813087220b200f49a1ca10faa.tar.gz"],
+    sha256 = "85ffff62a4c22a74dbd98d05da6cf40f497344b3dbf1e1ab0a37ab2a1a6ca014",
+    strip_prefix = "rules_docker-0.23.0",
+    urls = ["https://github.com/bazelbuild/rules_docker/releases/download/v0.23.0/rules_docker-v0.23.0.tar.gz"],
 )
 
 http_archive(
@@ -96,26 +96,11 @@ filegroup(
     srcs = glob(["*/**"]),
     visibility = ["//visibility:public"],
 )
-filegroup(
-    name = "ensure",
-    srcs = [],
-    visibility = ["//visibility:public"],
-)
 """,
     sha256 = "1b2464c308f1c8767f20887354c831c92412ff43b881cf85b121a49337724bb9",
     urls = [
         "https://github.com/aspect-build/debian-sysroot-image-creator/releases/download/87c56f3/debian_stretch_amd64_sysroot.tar.xz",
     ],
-)
-
-load("@io_bazel_rules_docker//toolchains/docker:toolchain.bzl",
-    docker_toolchain_configure="toolchain_configure"
-)
-
-# Hack for rules_docker to be able to find `docker` on M1 mac
-docker_toolchain_configure(
-  name = "docker_config",
-  docker_path="/usr/local/bin/docker",
 )
 
 load("@io_bazel_rules_docker//container:container.bzl", "container_pull")

@@ -11,10 +11,6 @@ go_library(
 go_binary(
     name = "main",
     embed = [":main_lib"],
-    goarch = "amd64",
-    goos = "linux",
-    pure = "off",
-    visibility = ["//visibility:public"],
 )
 
 container_layer(
