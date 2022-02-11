@@ -27,7 +27,7 @@ http_archive(
     patch_args = ["-p1"],
     patches = ["//:com_grail_bazel_toolchain_m1.patch"],
     strip_prefix = "bazel-toolchain-560cf0f5b796d68ba758565e8906ac900a056b5a",
-    url = "https://github.com/aspect-build/bazel-toolchain/archive/560cf0f5b796d68ba758565e8906ac900a056b5a.tar.gz",
+    url = "https://github.com/grailbio/bazel-toolchain/archive/560cf0f5b796d68ba758565e8906ac900a056b5a.tar.gz",
 )
 
 load("@com_grail_bazel_toolchain//toolchain:deps.bzl", "bazel_toolchain_dependencies")
